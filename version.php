@@ -22,7 +22,7 @@
  
 defined('MOODLE_INTERNAL') || die();
  
-$plugin->version   = 2017032217;
+$plugin->version   = 2017032221;
 $plugin->cron      = 0;
 $plugin->component = 'repository_arix';
 $plugin->maturity  = MATURITY_STABLE;

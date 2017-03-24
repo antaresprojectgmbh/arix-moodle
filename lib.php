@@ -3,7 +3,7 @@
 //error_reporting(E_ALL & ~E_NOTICE);
 //ini_set("display_errors", 1);
 
-require_once(dirname(dirname(__FILE__)) . '/arix/arix.php');
+require_once dirname(dirname(__FILE__)) . '/arix/arix.php';
 
 class repository_arix extends repository
 {
@@ -16,24 +16,6 @@ class repository_arix extends repository
     public function check_login()
     {
         return true;
-    }
-
-    public function print_login()
-    {
-        $user_field->label = get_string('username', 'repository_arix') . ': ';
-        $user_field->id = 'demo_username';
-        $user_field->type = 'text';
-        $user_field->name = 'demousername';
-        $user_field->value = $ret->username;
-
-        $passwd_field->label = get_string('password', 'repository_arix') . ': ';
-        $passwd_field->id = 'demo_password';
-        $passwd_field->type = 'password';
-        $passwd_field->name = 'demopassword';
-
-        $form = array();
-        $form['login'] = array($user_field, $passwd_field);
-        return $form;
     }
 
     public static function get_type_option_names()
@@ -85,7 +67,7 @@ class repository_arix extends repository
     }
 
     public function search($text)
-    { 
+    {
         $search_result = array();
         $arix_cli = new ArixClient("http://arix.datenbank-bildungsmedien.net/", "NRW");
         $search_result['list'] = $arix_cli->search($text);

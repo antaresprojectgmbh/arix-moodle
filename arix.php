@@ -10,7 +10,7 @@ class ArixClient
 
     public $searchStmt = <<<EOT
     	<search fields='titel'>
-			<condition field='text'>%s</condition>
+			<condition field='text_fields'>%s</condition>
 		</search>
 EOT;
 
@@ -27,6 +27,28 @@ EOT;
         $context = stream_context_create($options);
         $xmldata = file_get_contents($this->url, false, $context);
         return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
+    }
+
+    private function generatePhrase($notch, $password) {
+        return md5("$notch:$password");
+    }
+
+    private function getNotch($identifier)
+    {
+        $data = array('xmlstatement' => sprintf("<notch identifier='%s' />", $identifier));
+        $xml = $this->getXMLObject($data);
+
+        $result = array();
+        $result['id'] = (string) $xml->attributes()[0];
+        $result['notch'] = (string) $xml;
+
+        return $result;
+    }
+
+    public function getLink($identifier) {
+        $notch = $this->getNotch($identifier);
+        //TODO - generate link
+        return $notch;
     }
 
     public function search($query)
@@ -58,3 +80,8 @@ EOT;
         return $result;
     }
 }
+
+/*$arix = new ArixClient("http://arix.datenbank-bildungsmedien.net/", "NRW");
+$xml = $arix->getLink('histo-4850060');
+
+print_r($xml);*/
