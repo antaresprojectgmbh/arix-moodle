@@ -29,11 +29,12 @@ EOT;
         return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
     }
 
-    private function generatePhrase($notch, $password) {
-        return md5("$notch:$password");
+    private function generatePhrase($notch)
+    {
+        return md5("$notch:$this->password");
     }
 
-    private function getNotch($identifier)
+    public function getNotch($identifier)
     {
         $data = array('xmlstatement' => sprintf("<notch identifier='%s' />", $identifier));
         $xml = $this->getXMLObject($data);
@@ -45,10 +46,16 @@ EOT;
         return $result;
     }
 
-    public function getLink($identifier) {
+    public function getLink($identifier)
+    {
         $notch = $this->getNotch($identifier);
-        //TODO - generate link
-        return $notch;
+
+        //TODO - woher soll das Password kommen ?
+        $phrase = $this->generatePhrase($notch['notch']);
+        $data = array('xmlstatement' => sprintf("<link id='%s'>%s</link>", $notch['id'], $phrase));
+        $xml = $this->getXMLObject($data);
+
+        return (string) $xml->a[1]->attributes()['href'];
     }
 
     public function search($query)
@@ -60,6 +67,8 @@ EOT;
         foreach ($xml->r as $a) {
             $obj = array();
             $obj['source'] = (string) $a->attributes()[0];
+            $obj['url'] = (string) $a->attributes()[0];
+            //$obj['url'] = $this->getLink($obj['source']);
             $obj['thumbnail'] = 'http://localhost/playground/ic_personal_video_black_24dp_2x.png';
             foreach ($a->f as $b) {
 
@@ -74,6 +83,7 @@ EOT;
                         $obj["licence"] = (string) $b;
                         break;
                 }
+
             }
             array_push($result, $obj);
         }
@@ -82,6 +92,6 @@ EOT;
 }
 
 /*$arix = new ArixClient("http://arix.datenbank-bildungsmedien.net/", "NRW");
-$xml = $arix->getLink('histo-4850060');
+$xml = $arix->getLink('EDMOND-4995035');
 
 print_r($xml);*/
