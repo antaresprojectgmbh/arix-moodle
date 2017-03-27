@@ -55,7 +55,7 @@ EOT;
         $data = array('xmlstatement' => sprintf("<link id='%s'>%s</link>", $notch['id'], $phrase));
         $xml = $this->getXMLObject($data);
 
-        return (string) $xml->a[1]->attributes()['href'];
+        return (string) $xml->a[0]->attributes()['href'];
     }
 
     public function search($query)
