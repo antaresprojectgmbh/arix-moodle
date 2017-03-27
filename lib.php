@@ -61,16 +61,25 @@ class repository_arix extends repository
         return $list;
     }
 
+    private function getArixCli()
+    {
+        $arix_url = 'http://arix.datenbank-bildungsmedien.net/';
+        $kontext = 'NRW';
+        //$arix_url = get_config('repository_arix', 'arix_url');
+        //$kontext = get_config('repository_arix', 'kontext');
+        return new ArixClient($arix_url, $kontext);
+    }
+
     public function get_link($url)
     {
-        $arix_cli = new ArixClient("http://arix.datenbank-bildungsmedien.net/", "NRW");
+        $arix_cli = $this->getArixCli();
         return $arix_cli->getLink($url);
     }
 
     public function search($text)
     {
         $search_result = array();
-        $arix_cli = new ArixClient("http://arix.datenbank-bildungsmedien.net/", "NRW");
+        $arix_cli = $this->getArixCli();
         $search_result['list'] = $arix_cli->search($text);
         $search_result['issearchresult'] = true;
         $search_result['norefresh'] = true;
