@@ -90,8 +90,3 @@ EOT;
         return $result;
     }
 }
-
-/*$arix = new ArixClient("http://arix.datenbank-bildungsmedien.net/", "NRW");
-$xml = $arix->getLink('EDMOND-4995035');
-
-print_r($xml);*/

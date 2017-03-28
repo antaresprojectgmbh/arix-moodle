@@ -5,6 +5,13 @@
 
 require_once dirname(dirname(__FILE__)) . '/arix/arix.php';
 
+/*if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $arix_src = $_GET['arix_play'];
+    if ($arix_src) {
+        print $arix_src;
+    }
+}*/
+
 class repository_arix extends repository
 {
 
@@ -18,12 +25,12 @@ class repository_arix extends repository
         return true;
     }
 
-    public static function get_type_option_names()
+    public static function get_instance_option_names()
     {
-        return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext'));
+        return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext', 'token'));
     }
 
-    public function type_config_form($mform)
+    public function instance_config_form($mform)
     {
         parent::type_config_form($mform);
 
@@ -34,6 +41,10 @@ class repository_arix extends repository
         $kontext = get_config('repository_arix', 'kontext');
         $mform->addElement('text', 'kontext', get_string('kontext', 'repository_arix'), array('size' => '40'));
         $mform->setDefault('kontext', $kontext);
+        
+        $token = get_config('repository_arix', 'token');
+        $mform->addElement('text', 'token', get_string('token', 'repository_arix'), array('size' => '40'));
+        $mform->setDefault('token', $token);
     }
 
     public function get_listing($path = '', $page = '')
@@ -63,10 +74,9 @@ class repository_arix extends repository
 
     private function getArixCli()
     {
-        $arix_url = 'http://arix.datenbank-bildungsmedien.net/';
-        $kontext = 'NRW';
-        //$arix_url = get_config('repository_arix', 'arix_url');
-        //$kontext = get_config('repository_arix', 'kontext');
+        $arix_url = $this->get_option('arix_url');
+        $kontext = $this->get_option('kontext');
+
         return new ArixClient($arix_url, $kontext);
     }
 
@@ -74,7 +84,17 @@ class repository_arix extends repository
     {
         $arix_cli = $this->getArixCli();
         return $arix_cli->getLink($url);
+        /*$actual_link = str_replace('action=download', 'arix_play=' . $url, $_SERVER['REQUEST_URI']);
+        $actual_link = str_replace('repository_ajax.php', 'arix/lib.php', $actual_link);
+        return $actual_link;*/
     }
+
+    /*public function open_link($identifier)
+    {
+        $arix_cli = $this->getArixCli();
+        header("Location: $arix_cli->getLink($url)");
+        die();
+    }*/
 
     public function search($text)
     {
