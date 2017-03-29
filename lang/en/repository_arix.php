@@ -1,10 +1,9 @@
 <?php
-
-
 $string['configplugin'] = 'Configuration for my plugin repository';
 $string['pluginname'] = 'arix';
-$string['pluginname_help'] = 'A few more details about my repository';
-$string['arix_url'] = 'URL to arix';
-$string['kontext'] = 'kontext';
-$string['token'] = 'token';
+$string['arix_url'] = 'Arix URL';
+$string['kontext'] = 'Kontext';
+$string['token'] = 'Token';
+$string['username'] = "Username";
+$string['password'] = "Password";
 $string['arix:view'] = 'arix';

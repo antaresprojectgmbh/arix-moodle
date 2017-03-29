@@ -3,9 +3,13 @@
 class ArixClient
 {
 
-    public function __construct($url, $context)
+    public function __construct($url, $context, $userid, $password)
     {
+        if (!$url) {
+            $url = "http://arix.datenbank-bildungsmedien.net/";
+        }
         $this->url = join('/', array(trim($url, '/'), trim($context, '/')));
+        $this->login($userid, $password);
     }
 
     public $searchStmt = <<<EOT
@@ -27,6 +31,18 @@ EOT;
         $context = stream_context_create($options);
         $xmldata = file_get_contents($this->url, false, $context);
         return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
+    }
+
+    private function login($userid, $password)
+    {
+        $data = array('xmlstatement' => sprintf("<login user_id='%s' password='%s' /> ", $userid, md5($password)));
+        $xml = $this->getXMLObject($data);
+        
+        $allow = $xml->attributes()['allow'];
+        if ($allow == 'yes') {
+            $this->userid = $xml->attributes()['tmpuser'];
+            $this->password = (string) $xml;
+        }
     }
 
     private function generatePhrase($notch)
@@ -52,7 +68,7 @@ EOT;
 
         //TODO - woher soll das Password kommen ?
         $phrase = $this->generatePhrase($notch['notch']);
-        $data = array('xmlstatement' => sprintf("<link id='%s'>%s</link>", $notch['id'], $phrase));
+        $data = array('xmlstatement' => sprintf("<link id='%s' tmpuser='%s' >%s</link>", $notch['id'], $this->userid, $phrase));
         $xml = $this->getXMLObject($data);
 
         return (string) $xml->a[0]->attributes()['href'] . "?play";
@@ -90,3 +106,5 @@ EOT;
         return $result;
     }
 }
+
+$cli = new ArixClient("", "HE/30/030999", '1', "bla");

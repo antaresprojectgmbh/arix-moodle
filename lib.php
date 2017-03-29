@@ -1,33 +1,71 @@
 <?php
 
-//error_reporting(E_ALL & ~E_NOTICE);
-//ini_set("display_errors", 1);
-
 require_once dirname(dirname(__FILE__)) . '/arix/arix.php';
-
-/*if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $arix_src = $_GET['arix_play'];
-    if ($arix_src) {
-        print $arix_src;
-    }
-}*/
 
 class repository_arix extends repository
 {
 
     public function __construct($repositoryid, $context = SYSCONTEXTID, $options = array())
     {
+        global $SESSION;
+
         parent::__construct($repositoryid, $context, $options);
+        $this->sessname = 'arix_session';
+        $this->userid = optional_param('arix_username', '', PARAM_RAW);
+        $this->password = optional_param('arix_password', '', PARAM_RAW);
+
+        if (empty($SESSION->{$this->sessname}) && !empty($this->userid) && !empty($this->password)) {
+            $sess = array();
+            $sess['username'] = $this->userid;
+            $sess['password'] = $this->password;
+            $SESSION->{$this->sessname} = $sess;
+        } else {
+            if (!empty($SESSION->{$this->sessname})) {
+                $sess = $SESSION->{$this->sessname};
+                $this->userid = $sess['username'];
+                $this->password = $sess['password'];
+            }
+        }
     }
 
     public function check_login()
     {
-        return true;
+        global $SESSION;
+        return !empty($SESSION->{$this->sessname});
+    }
+
+    public function print_login()
+    {
+        if ($this->options['ajax']) {
+            $user_field = new stdClass();
+            $user_field->label = get_string('username', 'repository_arix') . ': ';
+            $user_field->id = 'arix_username';
+            $user_field->type = 'text';
+            $user_field->name = 'arix_username';
+
+            $passwd_field = new stdClass();
+            $passwd_field->label = get_string('password', 'repository_arix') . ': ';
+            $passwd_field->id = 'arix_password';
+            $passwd_field->type = 'password';
+            $passwd_field->name = 'arix_password';
+
+            $ret = array();
+            $ret['login'] = array($user_field, $passwd_field);
+            return $ret;
+        } else { // Non-AJAX login form - directly output the form elements
+            echo '<table>';
+            echo '<tr><td><label>' . get_string('username', 'repository_arix') . '</label></td>';
+            echo '<td><input type="text" name="al_username" /></td></tr>';
+            echo '<tr><td><label>' . get_string('password', 'repository_arix') . '</label></td>';
+            echo '<td><input type="password" name="al_password" /></td></tr>';
+            echo '</table>';
+            echo '<input type="submit" value="Enter" />';
+        }
     }
 
     public static function get_instance_option_names()
     {
-        return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext', 'token'));
+        return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext'));
     }
 
     public function instance_config_form($mform)
@@ -41,10 +79,6 @@ class repository_arix extends repository
         $kontext = get_config('repository_arix', 'kontext');
         $mform->addElement('text', 'kontext', get_string('kontext', 'repository_arix'), array('size' => '40'));
         $mform->setDefault('kontext', $kontext);
-        
-        $token = get_config('repository_arix', 'token');
-        $mform->addElement('text', 'token', get_string('token', 'repository_arix'), array('size' => '40'));
-        $mform->setDefault('token', $token);
     }
 
     public function get_listing($path = '', $page = '')
@@ -77,24 +111,16 @@ class repository_arix extends repository
         $arix_url = $this->get_option('arix_url');
         $kontext = $this->get_option('kontext');
 
-        return new ArixClient($arix_url, $kontext);
+        print $arix_url;
+        var_dump($kontext);
+        return new ArixClient($arix_url, $kontext, $this->userid, $this->password);
     }
 
     public function get_link($url)
     {
         $arix_cli = $this->getArixCli();
         return $arix_cli->getLink($url);
-        /*$actual_link = str_replace('action=download', 'arix_play=' . $url, $_SERVER['REQUEST_URI']);
-        $actual_link = str_replace('repository_ajax.php', 'arix/lib.php', $actual_link);
-        return $actual_link;*/
     }
-
-    /*public function open_link($identifier)
-    {
-        $arix_cli = $this->getArixCli();
-        header("Location: $arix_cli->getLink($url)");
-        die();
-    }*/
 
     public function search($text)
     {
@@ -110,7 +136,9 @@ class repository_arix extends repository
 
     public function logout()
     {
-        return true;
+        global $SESSION;
+        unset($SESSION->{$this->sessname});
+        return $this->print_login();
     }
 
     public function global_search()
