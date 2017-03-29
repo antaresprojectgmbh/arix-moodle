@@ -111,8 +111,6 @@ class repository_arix extends repository
         $arix_url = $this->get_option('arix_url');
         $kontext = $this->get_option('kontext');
 
-        print $arix_url;
-        var_dump($kontext);
         return new ArixClient($arix_url, $kontext, $this->userid, $this->password);
     }
 
