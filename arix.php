@@ -8,13 +8,15 @@ class ArixClient
         if (!$url) {
             $url = "http://arix.datenbank-bildungsmedien.net/";
         }
+
+        $this->context = $context;
         $this->url = join('/', array(trim($url, '/'), trim($context, '/')));
-        $this->login($userid, $password);
+        //$this->login($userid, $password);
     }
 
     public $searchStmt = <<<EOT
     	<search fields='titel'>
-			<condition field='text_fields'>%s</condition>
+			<condition field='titel'>%s</condition>
 		</search>
 EOT;
 
@@ -30,6 +32,9 @@ EOT;
 
         $context = stream_context_create($options);
         $xmldata = file_get_contents($this->url, false, $context);
+
+        $xmldata = utf8_encode($xmldata);
+
         return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
     }
 
@@ -37,7 +42,7 @@ EOT;
     {
         $data = array('xmlstatement' => sprintf("<login user_id='%s' password='%s' /> ", $userid, md5($password)));
         $xml = $this->getXMLObject($data);
-        
+
         $allow = $xml->attributes()['allow'];
         if ($allow == 'yes') {
             $this->userid = $xml->attributes()['tmpuser'];
@@ -66,7 +71,6 @@ EOT;
     {
         $notch = $this->getNotch($identifier);
 
-        //TODO - woher soll das Password kommen ?
         $phrase = $this->generatePhrase($notch['notch']);
         $data = array('xmlstatement' => sprintf("<link id='%s' tmpuser='%s' >%s</link>", $notch['id'], $this->userid, $phrase));
         $xml = $this->getXMLObject($data);
@@ -76,18 +80,19 @@ EOT;
 
     public function search($query)
     {
+        global $CFG, $USER;
+
         $data = array('xmlstatement' => sprintf($this->searchStmt, $query));
         $xml = $this->getXMLObject($data);
 
         $result = array();
         foreach ($xml->r as $a) {
             $obj = array();
-            $obj['source'] = (string) $a->attributes()[0];
-            $obj['url'] = (string) $a->attributes()[0];
-            //$obj['url'] = $this->getLink($obj['source']);
+            $identifier = (string) $a->attributes()['identifier'];
+            $obj['source'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&teacher=' . $USER->id . '&kontext=' . urlencode($this->context);
+            $obj['url'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&teacher=' . $USER->id . '&kontext=' . urlencode($this->context);
             $obj['thumbnail'] = 'http://localhost/playground/ic_personal_video_black_24dp_2x.png';
             foreach ($a->f as $b) {
-
                 switch ((string) $b->attributes()[0]) {
                     case "text":
                         $obj["text"] = (string) $b;
@@ -106,5 +111,3 @@ EOT;
         return $result;
     }
 }
-
-$cli = new ArixClient("", "HE/30/030999", '1', "bla");

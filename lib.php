@@ -116,8 +116,9 @@ class repository_arix extends repository
 
     public function get_link($url)
     {
-        $arix_cli = $this->getArixCli();
-        return $arix_cli->getLink($url);
+        //$arix_cli = $this->getArixCli();
+        //return $arix_cli->getLink($url);
+        return $url;
     }
 
     public function search($text)

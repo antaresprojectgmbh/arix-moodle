@@ -19,11 +19,9 @@
  * @copyright 2014, You Name <your@email.address>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 defined('MOODLE_INTERNAL') || die();
- 
-$plugin->version   = 2017032828;
-$plugin->cron      = 0;
-$plugin->component = 'repository_arix';
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = 'TODO';
+
+$plugin->version   = 2017033010;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2011112900;        // Requires this Moodle version
+$plugin->component = 'repository_arix'; // Full name of the plugin (used for diagnostics
