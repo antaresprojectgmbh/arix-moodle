@@ -15,13 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
  
 /**
- * @package   plugintype_pluginname
- * @copyright 2014, You Name <your@email.address>
+ * @package   repository_arix
+ * @copyright 2017, ANTARES PROJECT GmbH
+ * @author    Rene Kaufmann <kaufmann.r@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017033010;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2017033016;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2011112900;        // Requires this Moodle version
 $plugin->component = 'repository_arix'; // Full name of the plugin (used for diagnostics

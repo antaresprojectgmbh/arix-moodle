@@ -1,4 +1,25 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+ 
+/**
+ * @package   repository_arix
+ * @copyright 2017, ANTARES PROJECT GmbH
+ * @author    Rene Kaufmann <kaufmann.r@gmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 require_once dirname(dirname(__FILE__)) . '/arix/arix.php';
 
@@ -7,60 +28,7 @@ class repository_arix extends repository
 
     public function __construct($repositoryid, $context = SYSCONTEXTID, $options = array())
     {
-        global $SESSION;
-
         parent::__construct($repositoryid, $context, $options);
-        $this->sessname = 'arix_session';
-        $this->userid = optional_param('arix_username', '', PARAM_RAW);
-        $this->password = optional_param('arix_password', '', PARAM_RAW);
-
-        if (empty($SESSION->{$this->sessname}) && !empty($this->userid) && !empty($this->password)) {
-            $sess = array();
-            $sess['username'] = $this->userid;
-            $sess['password'] = $this->password;
-            $SESSION->{$this->sessname} = $sess;
-        } else {
-            if (!empty($SESSION->{$this->sessname})) {
-                $sess = $SESSION->{$this->sessname};
-                $this->userid = $sess['username'];
-                $this->password = $sess['password'];
-            }
-        }
-    }
-
-    public function check_login()
-    {
-        global $SESSION;
-        return !empty($SESSION->{$this->sessname});
-    }
-
-    public function print_login()
-    {
-        if ($this->options['ajax']) {
-            $user_field = new stdClass();
-            $user_field->label = get_string('username', 'repository_arix') . ': ';
-            $user_field->id = 'arix_username';
-            $user_field->type = 'text';
-            $user_field->name = 'arix_username';
-
-            $passwd_field = new stdClass();
-            $passwd_field->label = get_string('password', 'repository_arix') . ': ';
-            $passwd_field->id = 'arix_password';
-            $passwd_field->type = 'password';
-            $passwd_field->name = 'arix_password';
-
-            $ret = array();
-            $ret['login'] = array($user_field, $passwd_field);
-            return $ret;
-        } else { // Non-AJAX login form - directly output the form elements
-            echo '<table>';
-            echo '<tr><td><label>' . get_string('username', 'repository_arix') . '</label></td>';
-            echo '<td><input type="text" name="al_username" /></td></tr>';
-            echo '<tr><td><label>' . get_string('password', 'repository_arix') . '</label></td>';
-            echo '<td><input type="password" name="al_password" /></td></tr>';
-            echo '</table>';
-            echo '<input type="submit" value="Enter" />';
-        }
     }
 
     public static function get_instance_option_names()
@@ -111,13 +79,11 @@ class repository_arix extends repository
         $arix_url = $this->get_option('arix_url');
         $kontext = $this->get_option('kontext');
 
-        return new ArixClient($arix_url, $kontext, $this->userid, $this->password);
+        return new ArixClient($arix_url, $kontext);
     }
 
     public function get_link($url)
     {
-        //$arix_cli = $this->getArixCli();
-        //return $arix_cli->getLink($url);
         return $url;
     }
 
@@ -131,13 +97,6 @@ class repository_arix extends repository
         $search_result['dynload'] = true;
 
         return $search_result;
-    }
-
-    public function logout()
-    {
-        global $SESSION;
-        unset($SESSION->{$this->sessname});
-        return $this->print_login();
     }
 
     public function global_search()
