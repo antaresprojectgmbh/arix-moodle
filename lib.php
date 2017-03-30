@@ -36,7 +36,7 @@ class repository_arix extends repository
         return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext'));
     }
 
-    public function instance_config_form($mform)
+    static function instance_config_form($mform)
     {
         parent::type_config_form($mform);
 
