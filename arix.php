@@ -54,7 +54,7 @@ EOT;
         $context = stream_context_create($options);
         $xmldata = file_get_contents($this->url, false, $context);
 
-        //$xmldata = utf8_encode($xmldata);
+        $xmldata = utf8_encode($xmldata);
 
         return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
     }
