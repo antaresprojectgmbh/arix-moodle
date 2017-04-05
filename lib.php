@@ -87,7 +87,7 @@ class repository_arix extends repository
         return $url;
     }
 
-    public function search($text)
+    public function search($text, $page = 0)
     {
         $search_result = array();
         $arix_cli = $this->getArixCli();
