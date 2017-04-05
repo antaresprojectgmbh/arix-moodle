@@ -23,6 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017033017;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2017040500;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2011112900;        // Requires this Moodle version
 $plugin->component = 'repository_arix'; // Full name of the plugin (used for diagnostics

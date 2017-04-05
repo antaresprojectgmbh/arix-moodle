@@ -131,9 +131,9 @@ EOT;
                 }
             }
 
-            $title = $obj['titel'];
-            $title = substr($title, 0 - strlen($type)) . '.' . $type;
+            $title = $obj['title'];
             $type = $this->get_type($obj['typ']);
+            $title = substr($title, 0 - strlen($type)) . '.' . $type;
             $icon = mimeinfo('icon', $title);
             $obj['thumbnail'] = $CFG->wwwroot . '/pix/f/' . $icon . '-32.png';
 
