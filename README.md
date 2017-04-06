@@ -2,7 +2,7 @@
 
 ## Installation
 ### Dateisystem
-Um das Plugin zu installieren verschieben Sie einfach den gesamten Plugin-Ordner in das Repository Verzeichnis der moodle Installation.
+Um das Plugin zu installieren, verschieben Sie einfach den gesamten Plugin-Ordner in das Repository Verzeichnis der moodle Installation.
 
 ### Webinterface
 Alternativ lässt sich das Plugin über das moodle-Webinterface installieren.
@@ -15,7 +15,7 @@ und laden die ZIP Datei hoch.
 
 ## Konfiguration
 
-Nachdem Sie das Plugin installiert haben muss dieses zuerst aktiviert werden.
+Nachdem Sie das Plugin installiert haben, muss dieses zuerst aktiviert werden.
 
 Navigieren Sie hierzu einfach nach
 > Dashboard -> Website-Administration -> Plugins -> Repositories -> Übersicht
