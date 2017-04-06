@@ -21,8 +21,15 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+require_once dirname(dirname(__FILE__)) . '/arix/arix.php';
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once($CFG->dirroot . '/user/profile/lib.php');
+require_once($CFG->libdir.'/filelib.php');
 
-$plugin->version   = 2017040500;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2011112900;        // Requires this Moodle version
-$plugin->component = 'repository_arix'; // Full name of the plugin (used for diagnostics
+require_login();
+
+$identifier = required_param('id', PARAM_TEXT);
+$kontext = required_param('kontext', PARAM_TEXT);
+
+$cli = new ArixClient("", $kontext);
+redirect($cli->getLink($identifier));

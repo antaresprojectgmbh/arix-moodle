@@ -1,9 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+ 
+/**
+ * @package   repository_arix
+ * @copyright 2017, ANTARES PROJECT GmbH
+ * @author    Rene Kaufmann <kaufmann.r@gmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-//error_reporting(E_ALL & ~E_NOTICE);
-//ini_set("display_errors", 1);
-
-require_once(dirname(dirname(__FILE__)) . '/arix/arix.php');
+require_once dirname(dirname(__FILE__)) . '/arix/arix.php';
 
 class repository_arix extends repository
 {
@@ -13,35 +31,12 @@ class repository_arix extends repository
         parent::__construct($repositoryid, $context, $options);
     }
 
-    public function check_login()
-    {
-        return true;
-    }
-
-    public function print_login()
-    {
-        $user_field->label = get_string('username', 'repository_arix') . ': ';
-        $user_field->id = 'demo_username';
-        $user_field->type = 'text';
-        $user_field->name = 'demousername';
-        $user_field->value = $ret->username;
-
-        $passwd_field->label = get_string('password', 'repository_arix') . ': ';
-        $passwd_field->id = 'demo_password';
-        $passwd_field->type = 'password';
-        $passwd_field->name = 'demopassword';
-
-        $form = array();
-        $form['login'] = array($user_field, $passwd_field);
-        return $form;
-    }
-
-    public static function get_type_option_names()
+    public static function get_instance_option_names()
     {
         return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext'));
     }
 
-    public function type_config_form($mform)
+    static function instance_config_form($mform)
     {
         parent::type_config_form($mform);
 
@@ -79,15 +74,23 @@ class repository_arix extends repository
         return $list;
     }
 
+    private function getArixCli()
+    {
+        $arix_url = $this->get_option('arix_url');
+        $kontext = $this->get_option('kontext');
+
+        return new ArixClient($arix_url, $kontext);
+    }
+
     public function get_link($url)
     {
         return $url;
     }
 
-    public function search($text)
-    { 
+    public function search($text, $page = 0)
+    {
         $search_result = array();
-        $arix_cli = new ArixClient("http://arix.datenbank-bildungsmedien.net/", "NRW");
+        $arix_cli = $this->getArixCli();
         $search_result['list'] = $arix_cli->search($text);
         $search_result['issearchresult'] = true;
         $search_result['norefresh'] = true;
@@ -96,13 +99,13 @@ class repository_arix extends repository
         return $search_result;
     }
 
-    public function logout()
-    {
-        return true;
-    }
-
     public function global_search()
     {
         return false;
+    }
+
+    public function supported_returntypes()
+    {
+        return FILE_EXTERNAL;
     }
 }
