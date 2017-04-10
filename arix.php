@@ -24,14 +24,14 @@
 class ArixClient
 {
 
-    public function __construct($url, $context)
+    public function __construct($url, $token, $context)
     {
         if (!$url) {
             $url = "http://arix.datenbank-bildungsmedien.net/";
         }
 
         $this->context = $context;
-        $this->password = "<token>";
+        $this->password = $token;
         $this->url = join('/', array(trim($url, '/'), trim($context, '/')));
     }
 

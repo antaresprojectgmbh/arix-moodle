@@ -33,7 +33,7 @@ class repository_arix extends repository
 
     public static function get_instance_option_names()
     {
-        return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext'));
+        return array_merge(parent::get_type_option_names(), array('arix_url', 'kontext', 'token'));
     }
 
     static function instance_config_form($mform)
@@ -43,6 +43,10 @@ class repository_arix extends repository
         $arix_url = get_config('repository_arix', 'arix_url');
         $mform->addElement('text', 'arix_url', get_string('arix_url', 'repository_arix'), array('size' => '40'));
         $mform->setDefault('arix_url', $arix_url);
+
+        $token = get_config('repository_arix', 'token');
+        $mform->addElement('text', 'token', get_string('token', 'repository_arix'), array('size' => '40'));
+        $mform->setDefault('token', $token);
 
         $kontext = get_config('repository_arix', 'kontext');
         $mform->addElement('text', 'kontext', get_string('kontext', 'repository_arix'), array('size' => '40'));
@@ -78,8 +82,9 @@ class repository_arix extends repository
     {
         $arix_url = $this->get_option('arix_url');
         $kontext = $this->get_option('kontext');
+        $token = $this->get_option('token');
 
-        return new ArixClient($arix_url, $kontext);
+        return new ArixClient($arix_url, $token, $kontext);
     }
 
     public function get_link($url)
