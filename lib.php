@@ -42,14 +42,17 @@ class repository_arix extends repository
 
         $arix_url = get_config('repository_arix', 'arix_url');
         $mform->addElement('text', 'arix_url', get_string('arix_url', 'repository_arix'), array('size' => '40'));
+        $mform->setType('arix_url', PARAM_NOTAGS);
         $mform->setDefault('arix_url', $arix_url);
 
         $token = get_config('repository_arix', 'token');
         $mform->addElement('text', 'token', get_string('token', 'repository_arix'), array('size' => '40'));
+        $mform->setType('token', PARAM_NOTAGS);
         $mform->setDefault('token', $token);
 
         $kontext = get_config('repository_arix', 'kontext');
         $mform->addElement('text', 'kontext', get_string('kontext', 'repository_arix'), array('size' => '40'));
+        $mform->setType('kontext', PARAM_NOTAGS);
         $mform->setDefault('kontext', $kontext);
     }
 
