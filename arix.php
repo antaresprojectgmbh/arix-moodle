@@ -13,13 +13,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
- 
+
 /**
  * @package   repository_arix
  * @copyright 2017, ANTARES PROJECT GmbH
  * @author    Rene Kaufmann <kaufmann.r@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use \ForceUTF8\Encoding as encode;
 
 class ArixClient
 {
@@ -54,7 +56,8 @@ EOT;
         $context = stream_context_create($options);
         $xmldata = file_get_contents($this->url, false, $context);
 
-        $xmldata = utf8_encode($xmldata);
+        $xmldata = encode::toUTF8($xmldata);
+        // $xmldata = utf8_encode($xmldata);
 
         return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
     }
