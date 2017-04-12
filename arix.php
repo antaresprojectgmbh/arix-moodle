@@ -21,6 +21,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once dirname(dirname(__FILE__)) . '/arix/Encoding.php';
 use \ForceUTF8\Encoding as encode;
 
 class ArixClient
@@ -45,19 +46,9 @@ EOT;
 
     private function getXMLObject($data)
     {
-        $options = array(
-            'http' => array(
-                'header' => 'Content-type: application/x-www-form-urlencoded' . "\r\n",
-                'method' => 'POST',
-                'content' => http_build_query($data),
-            ),
-        );
-
-        $context = stream_context_create($options);
-        $xmldata = file_get_contents($this->url, false, $context);
-
-        $xmldata = encode::toUTF8($xmldata);
-        // $xmldata = utf8_encode($xmldata);
+        $c = new curl(array('cache' => true, 'module_cache' => 'repository'));
+        $content = $c->post($this->url, $data);
+        $xmldata = encode::toUTF8($content);
 
         return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
     }
@@ -107,7 +98,7 @@ EOT;
         return 'html'; //unknown
     }
 
-    public function search($query)
+    public function search($query, $repoid)
     {
         global $CFG;
 
@@ -118,8 +109,8 @@ EOT;
         foreach ($xml->r as $a) {
             $obj = array();
             $identifier = (string) $a->attributes()['identifier'];
-            $obj['source'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context);
-            $obj['url'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context);
+            $obj['source'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context) . '&repo=' . urlencode($repoid);
+            $obj['url'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context) . '&repo=' . urlencode($repoid);
             foreach ($a->f as $b) {
                 switch ((string) $b->attributes()[0]) {
                     case "text":

@@ -99,7 +99,7 @@ class repository_arix extends repository
     {
         $search_result = array();
         $arix_cli = $this->getArixCli();
-        $search_result['list'] = $arix_cli->search($text);
+        $search_result['list'] = $arix_cli->search($text, $this->id);
         $search_result['issearchresult'] = true;
         $search_result['norefresh'] = true;
         $search_result['dynload'] = true;

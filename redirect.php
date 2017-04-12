@@ -30,6 +30,13 @@ require_login();
 
 $identifier = required_param('id', PARAM_TEXT);
 $kontext = required_param('kontext', PARAM_TEXT);
+$repoid = required_param('repo', PARAM_TEXT);
 
-$cli = new ArixClient("", $kontext);
+/*if (!$repo = $DB->get_record('repository_instance_config', array('instanceid' => $repoid))) {
+    print_error('repository_instance_notfound', 'respository_antares');
+}*/
+
+//TODO - get the auth token from the repository instance config
+
+$cli = new ArixClient("", $token, $kontext);
 redirect($cli->getLink($identifier));
