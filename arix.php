@@ -27,14 +27,14 @@ use \ForceUTF8\Encoding as encode;
 class ArixClient
 {
 
-    public function __construct($url, $token, $context)
+    public function __construct($url, $context)
     {
         if (!$url) {
             $url = "http://arix.datenbank-bildungsmedien.net/";
         }
 
         $this->context = $context;
-        $this->password = $token;
+        $this->password = <token>;
         $this->url = join('/', array(trim($url, '/'), trim($context, '/')));
     }
 
@@ -98,7 +98,7 @@ EOT;
         return 'html'; //unknown
     }
 
-    public function search($query, $repoid)
+    public function search($query)
     {
         global $CFG;
 
@@ -109,8 +109,8 @@ EOT;
         foreach ($xml->r as $a) {
             $obj = array();
             $identifier = (string) $a->attributes()['identifier'];
-            $obj['source'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context) . '&repo=' . urlencode($repoid);
-            $obj['url'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context) . '&repo=' . urlencode($repoid);
+            $obj['source'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context);
+            $obj['url'] = $CFG->wwwroot . '/repository/arix/redirect.php?id=' . urlencode($identifier) . '&kontext=' . urlencode($this->context);
             foreach ($a->f as $b) {
                 switch ((string) $b->attributes()[0]) {
                     case "text":
