@@ -30,6 +30,13 @@ Es erscheint ein Formular mit den folgenden Einstellungsmöglichkeiten:
  - Name des Plugins: kann leer gelassen werden.
  - Arix URL: Eine Optionale URL zu einem Arix API-Provider. Wird keine URL angegeben wird **http://arix.datenbank-bildungsmedien.net/** verwendet.
  - Kontext: {z.B. HE/30/030999} [land]/[standortnummer]/[schulnummer]
+   
+   Der Kontext kann auch verkürzt werden:
+   NRW ist z.B. der allgemeine Kontext Nordrhein-Westfalen.
+   NRW/VIE ist der allgemeine Kontext für den Standort Viersen in NRW.
+   Es werden bei einer Suchanfrage nur die Medien ausgegeben, die auch für diesen Kontext zur Verfügung stehen. Im ersten      Fall also nur Landeslizenzen, im zweiten Landes- sowie Kreislizenzen
+   Der kürzeste funktionierende Kontext besteht aus mindestens dem Land.
+
 
 Füllen Sie alle Felder aus und klicken auf Speichern.
 Das Plugin sollte nun einsatzbereit sein.
