@@ -51,29 +51,41 @@ class repository_arix extends repository
         $mform->setDefault('kontext', $kontext);
     }
 
+    public function print_login() {
+        $keyword = new stdClass();
+        $keyword->label = get_string('keyword', 'repository_wikimedia').': ';
+        $keyword->id    = 'input_text_keyword';
+        $keyword->type  = 'text';
+        $keyword->name  = 'wikimedia_keyword';
+        $keyword->value = '';
+        if ($this->options['ajax']) {
+            $form = array();
+            $form['login'] = array($keyword);
+            $form['nologin'] = true;
+            $form['norefresh'] = true;
+            $form['nosearch'] = true;
+			return $form;
+		}
+	}
+
+    public function check_login() {
+        $this->keyword = optional_param('wikimedia_keyword', '', PARAM_RAW);
+        if (empty($this->keyword)) {
+            $this->keyword = optional_param('s', '', PARAM_RAW);
+        }
+        return !empty($this->keyword);
+    }
+
     public function get_listing($path = '', $page = '')
     {
-        $list = array();
-        $list['list'] = array();
-        // the management interface url
-        $list['manage'] = false;
-        // dynamically loading
-        $list['dynload'] = true;
-        // set to true, the login link will be removed
-        $list['nologin'] = false;
-        // set to true, the search button will be removed
-        $list['nosearch'] = false;
-        // a file in listing
-        $list['list'][] = array('title' => 'file.txt',
-            'size' => '1kb',
-            'date' => '2008.1.12',
-            // plugin-dependent unique path to the file (id, url, path, etc.)
-            'source' => '',
-            // the accessible url of the file
-            'url' => '',
-        );
+        $search_result = array();
+        $arix_cli = $this->getArixCli();
+		$search_result['list'] = $arix_cli->search($this->keyword, $this->id);
+        $search_result['issearchresult'] = true;
+        $search_result['norefresh'] = true;
+        $search_result['dynload'] = true;
 
-        return $list;
+        return $search_result;
     }
 
     private function getArixCli()

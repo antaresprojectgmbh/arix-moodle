@@ -35,7 +35,7 @@ class ArixClient
 
         $this->context = $context;
         $this->password = <token>;
-        $this->url = join('/', array(trim($url, '/'), trim($context, '/')));
+		$this->url = join('/', array(trim($url, '/'), trim($context, '/')));
     }
 
     public $searchStmt = <<<EOT
