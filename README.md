@@ -28,7 +28,9 @@ Es erscheint ein Formular mit den folgenden Einstellungsmöglichkeiten:
 
  - Name: {z.B. Antares oder Arix} Der anzeige Name des Plugins.
  - Name des Plugins: kann leer gelassen werden.
- - Arix URL: Eine Optionale URL zu einem Arix API-Provider. Wird keine URL angegeben wird **http://arix.datenbank-bildungsmedien.net/** verwendet.
+ - Arix URL: Eine Optionale URL zu einem Arix API-Provider.
+   
+   Wird keine URL angegeben wird **http://arix.datenbank-bildungsmedien.net/** verwendet.
  - Kontext: {z.B. HE/30/030999} [land]/[standortnummer]/[schulnummer]
    
    Der Kontext kann auch verkürzt werden:
