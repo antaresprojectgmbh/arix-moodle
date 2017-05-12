@@ -17,7 +17,7 @@
 /**
  * @package   repository_arix
  * @copyright 2017, ANTARES PROJECT GmbH
- * @author    Rene Kaufmann <kaufmann.r@gmail.com>
+ * @author    Rene Kaufmann <rene@antares.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
