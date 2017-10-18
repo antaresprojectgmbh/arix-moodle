@@ -30,7 +30,7 @@ class ArixClient
     public function __construct($url, $context)
     {
         if (!$url) {
-            $url = "http://arix.datenbank-bildungsmedien.net/";
+            $url = "https://arix.datenbank-bildungsmedien.net/";
         }
 
         $this->context = $context;
@@ -77,7 +77,8 @@ EOT;
         $data = array('xmlstatement' => sprintf("<link id='%s'>%s</link>", $notch['id'], $phrase));
         $xml = $this->getXMLObject($data);
 
-        return (string) $xml->a[0]->attributes()['href'] . "?play";
+        $link = str_replace("http://", "https://", (string) $xml->a[0]->attributes()['href'] . "?play");
+        return $link;
     }
 
     private function get_type($typ)
